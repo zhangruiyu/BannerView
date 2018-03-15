@@ -22,7 +22,7 @@ For help on editing package code, view the [documentation](https://flutter.io/de
           data: ['a', 'b', 'c'],
           buildShowView: (index,data) {
             print(data);
-            return new BannerShowWidget(text: data);
+            return new CustomWidget(text: data);
           },
           onBannerClickListener: (index,data){
             print(index);

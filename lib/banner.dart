@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-typedef void OnBannerClickListener(int index, dynamic data);
-typedef Widget BuildShowView(int index, dynamic data);
+typedef void OnBannerClickListener(int index, dynamic itemData);
+typedef Widget BuildShowView(int index, dynamic itemData);
 
 const IntegerMax = 0x7fffffff;
 

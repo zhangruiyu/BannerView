@@ -1,8 +1,8 @@
 name: banner
-description: A new flutter package project.
+description: flutter 的轮播图控件
 version: 0.0.1
 author: 张瑞宇 <157418979@qq.com>
-homepage: http://www.baidu.com
+homepage: https://github.com/zhangruiyu/BannerView
 
 environment:
   sdk: ">=1.23.0 <2.0.0"

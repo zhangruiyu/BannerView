@@ -18,7 +18,7 @@ For help on editing package code, view the [documentation](https://flutter.io/de
 
 ###例子
 ```
-		new BannerView(
+    new BannerView(
           data: ['a', 'b', 'c'],
           buildShowView: (index,data) {
             print(data);

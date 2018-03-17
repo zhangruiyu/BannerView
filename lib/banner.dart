@@ -50,13 +50,13 @@ class BannerViewState extends State<BannerView> {
 
   resetTimer() {
     clearTimer();
-    timer = Zone.current.createPeriodicTimer(
+    timer =  new  Timer.periodic(
         new Duration(seconds: widget.delayTime), (Timer timer) {
       if(pageController.positions.isNotEmpty){
         var i = pageController.page.toInt() + 1;
         pageController.animateToPage(i == 3 ? 0 : i,
             duration: new Duration(milliseconds: widget.scrollTime),
-            curve: new Interval(0.0, 1.0));
+            curve:  Curves.linear);
       }
     });
   }

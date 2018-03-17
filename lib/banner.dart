@@ -25,11 +25,9 @@ class BannerView extends StatefulWidget {
         @required this.buildShowView,
         this.onBannerClickListener,
         this.delayTime = 3,
-        this.scrollTime = 500,
+        this.scrollTime = 200,
         this.height = 200.0})
-      : super(key: key) {
-    print(delayTime);
-  }
+      : super(key: key);
 
   @override
   State<StatefulWidget> createState() => new BannerViewState();
@@ -54,10 +52,12 @@ class BannerViewState extends State<BannerView> {
     clearTimer();
     timer = Zone.current.createPeriodicTimer(
         new Duration(seconds: widget.delayTime), (Timer timer) {
-      var i = pageController.page.toInt() + 1;
-      pageController.animateToPage(i == 3 ? 0 : i,
-          duration: new Duration(milliseconds: widget.scrollTime),
-          curve: new Interval(0.0, 1.0));
+      if(pageController.positions.isNotEmpty){
+        var i = pageController.page.toInt() + 1;
+        pageController.animateToPage(i == 3 ? 0 : i,
+            duration: new Duration(milliseconds: widget.scrollTime),
+            curve: new Interval(0.0, 1.0));
+      }
     });
   }
 
@@ -72,11 +72,15 @@ class BannerViewState extends State<BannerView> {
   Widget build(BuildContext context) {
     return new SizedBox(
         height: widget.height,
-        child: new GestureDetector(
+        child: widget.data.length == 0
+            ? null
+            : new GestureDetector(
           onTap: () {
 //            print('onTap');
-            widget.onBannerClickListener(pageController.page.toInt(),
-                widget.data[pageController.page.toInt()]);
+            widget.onBannerClickListener(
+                pageController.page.toInt() % widget.data.length,
+                widget.data[
+                pageController.page.toInt() % widget.data.length]);
           },
           onTapDown: (details) {
 //            print('onTapDown');
@@ -91,8 +95,8 @@ class BannerViewState extends State<BannerView> {
           },
           child: new PageView.custom(
             controller: pageController,
-            physics:
-            const PageScrollPhysics(parent: const BouncingScrollPhysics()),
+            physics: const PageScrollPhysics(
+                parent: const BouncingScrollPhysics()),
             childrenDelegate: new SliverChildBuilderDelegate(
                   (context, index) => widget.buildShowView(
                   index, widget.data[index % widget.data.length]),

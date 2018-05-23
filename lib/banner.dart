@@ -19,14 +19,13 @@ class BannerView extends StatefulWidget {
   final List data;
   final BuildShowView buildShowView;
 
-  BannerView(
-      {Key key,
-        @required this.data,
-        @required this.buildShowView,
-        this.onBannerClickListener,
-        this.delayTime = 3,
-        this.scrollTime = 200,
-        this.height = 200.0})
+  BannerView({Key key,
+    @required this.data,
+    @required this.buildShowView,
+    this.onBannerClickListener,
+    this.delayTime = 3,
+    this.scrollTime = 200,
+    this.height = 200.0})
       : super(key: key);
 
   @override
@@ -50,13 +49,13 @@ class BannerViewState extends State<BannerView> {
 
   resetTimer() {
     clearTimer();
-    timer =  new  Timer.periodic(
+    timer = new Timer.periodic(
         new Duration(seconds: widget.delayTime), (Timer timer) {
-      if(pageController.positions.isNotEmpty){
+      if (pageController.positions.isNotEmpty) {
         var i = pageController.page.toInt() + 1;
         pageController.animateToPage(i == 3 ? 0 : i,
             duration: new Duration(milliseconds: widget.scrollTime),
-            curve:  Curves.linear);
+            curve: Curves.linear);
       }
     });
   }
@@ -71,39 +70,39 @@ class BannerViewState extends State<BannerView> {
   @override
   Widget build(BuildContext context) {
     return new SizedBox(
-        height: widget.height,
-        child: widget.data.length == 0
-            ? null
-            : new GestureDetector(
-          onTap: () {
-//            print('onTap');
-            widget.onBannerClickListener(
-                pageController.page.toInt() % widget.data.length,
-                widget.data[
-                pageController.page.toInt() % widget.data.length]);
-          },
-          onTapDown: (details) {
+      height: widget.height,
+      child: widget.data.length == 0
+          ? null
+          :
+      new PageView.builder(
+        controller: pageController,
+        physics: const PageScrollPhysics(
+            parent: const ClampingScrollPhysics()),
+        itemBuilder: (BuildContext context, int index) {
+          return new GestureDetector(
+              onTap: () {
+                widget.onBannerClickListener(
+                    index % widget.data.length,
+                    widget.data[
+                    index % widget.data.length]);
+              },
+              onTapDown: (details) {
 //            print('onTapDown');
-            clearTimer();
-          },
-          onTapUp: (details) {
+                clearTimer();
+              },
+              onTapUp: (details) {
 //            print('onTapUp');
-            resetTimer();
-          },
-          onTapCancel: () {
-            resetTimer();
-          },
-          child: new PageView.custom(
-            controller: pageController,
-            physics: const PageScrollPhysics(
-                parent: const BouncingScrollPhysics()),
-            childrenDelegate: new SliverChildBuilderDelegate(
-                  (context, index) => widget.buildShowView(
-                  index, widget.data[index % widget.data.length]),
-              childCount: IntegerMax,
-            ),
-          ),
-        ));
+                resetTimer();
+              },
+              onTapCancel: () {
+                resetTimer();
+              },
+              child:widget.buildShowView(
+                  index, widget.data[index % widget.data.length]));
+        },
+        itemCount: IntegerMax,
+      ),
+    );
   }
 
   @override

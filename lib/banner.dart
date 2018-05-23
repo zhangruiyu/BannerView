@@ -1,5 +1,5 @@
 import 'dart:async';
-
+import 'dart:ui' as ui;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -69,40 +69,46 @@ class BannerViewState extends State<BannerView> {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQueryData
+        .fromWindow(ui.window)
+        .size
+        .width;
     return new SizedBox(
-      height: widget.height,
-      child: widget.data.length == 0
-          ? null
-          :
-      new PageView.builder(
-        controller: pageController,
-        physics: const PageScrollPhysics(
-            parent: const ClampingScrollPhysics()),
-        itemBuilder: (BuildContext context, int index) {
-          return new GestureDetector(
-              onTap: () {
-                widget.onBannerClickListener(
-                    index % widget.data.length,
-                    widget.data[
-                    index % widget.data.length]);
-              },
-              onTapDown: (details) {
+        height: widget.height,
+        child: widget.data.length == 0
+            ? null
+            :
+        new GestureDetector(
+          onTap: () {
+//            print(pageController.page);
+//            print(pageController.page.round());
+            widget.onBannerClickListener(
+                pageController.page.round() % widget.data.length,
+                widget.data[
+                pageController.page.round() % widget.data.length]);
+          },
+          onTapDown: (details) {
 //            print('onTapDown');
-                clearTimer();
-              },
-              onTapUp: (details) {
+            clearTimer();
+          },
+          onTapUp: (details) {
 //            print('onTapUp');
-                resetTimer();
-              },
-              onTapCancel: () {
-                resetTimer();
-              },
-              child:widget.buildShowView(
-                  index, widget.data[index % widget.data.length]));
-        },
-        itemCount: IntegerMax,
-      ),
-    );
+            resetTimer();
+          },
+          onTapCancel: () {
+            resetTimer();
+          },
+          child: new PageView.builder(
+            controller: pageController,
+            physics: const PageScrollPhysics(
+                parent: const ClampingScrollPhysics()),
+            itemBuilder: (BuildContext context, int index) {
+              return widget.buildShowView(
+                  index, widget.data[index % widget.data.length]);
+            },
+            itemCount: IntegerMax,
+          ),
+        ));
   }
 
   @override
